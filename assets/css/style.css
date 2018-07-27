@@ -20,6 +20,30 @@
   }
   
 
+   /***********************************
+                Pre Game Instructions
+  ***********************************/
+
+  #preGameMenu {
+    padding-top: 25px;
+    padding-bottom: 235px;
+    background: linear-gradient(#00c6ff, #0072ff);
+    color: white;
+    font-weight: bold;
+    overflow: hidden;
+  }
+
+  #preGameMenuContent {
+    margin-top: 50px;
+  }
+
+  #startGamePanelButton {
+    cursor: pointer; 
+    margin-top: 70px;
+    padding: 10px 40px;
+  }
+
+
   
   
   /***********************************
@@ -91,6 +115,7 @@
   li {
     margin: 12px 0;
     font-size: 24px;
+    color: black;
   }
   
   .outcomes {
@@ -108,6 +133,11 @@
     margin-top: 20px;
     font-size: 30px;
   }
+
+  #player {
+    color: blue;
+  }
+
   
   /***********************************
               Chatbox
@@ -140,7 +170,7 @@
   button#chat-send {
     padding: 20px;
     padding-left: 30px;
-    padding-right: 75px;
+    padding-right: 95px;
     margin-bottom: 20px;
   }
 

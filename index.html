@@ -9,66 +9,120 @@
         crossorigin="anonymous">
     <link>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
     <title>RPS Multiplayer</title>
 </head>
 
 <header>
-    <h1 style="text-align: center">Firebase RPS Multiplayer</h1>
+    <h1 class="mx-auto text-center display-4">Firebase RPS Multiplayer</h1>
 </header>
 
 
-<div id="swap-zone">
-    <input id="username" placeholder="Name">
+<div id="preGameMenu" class="text-center mx-auto">
+    <div id="preGameMenuContent">
+        <h1 class="mx-auto text-center">Game Instructions</h1>
+        <p>This is a 2 player multiplayer online game. Each player will have 3 choices to select from:</p>
+        <p>Rock, Paper or Scissors</p>
+        <p>The player to win 3 out of the 5 total games first will stay, and the loser will move into the spectator section
+            and wait in line to play again</p>
+
+        <p>Meanwhile, the players spectating are free to use the chat room untii it is their turn.</p>
+
+        <button type="button" id="startGamePanelButton" class="btn btn-outline-light btn-lg">Okay
+            <i class="fa fa-check-square-o"></i>
+        </button>
+    </div>
 </div>
-<div id="startButtonDiv" class="mx-auto text-center">
-    <button id="start" class="mx-auto text-center btn btn-primary">Start</button>
-</div>
 
-<div id="current-turn"></div>
 
-<div id="game-div">
+<div id="RPSGame">
+    <div id="swap-zone">
+        <input id="username" placeholder="Name">
+    </div>
+    <div id="startButtonDiv" class="mx-auto text-center">
+        <button id="start" class="mx-auto text-center btn btn-primary">Start
+            <i class="fa fa-user"></i>
+        </button>
+    </div>
 
-    <div id="player1">
-        <h3 id="player1-name">Player1</h3>
-        <ul>
-        </ul>
-        <div id="player1-chosen"></div>
-        <div class="outcomes">
-            <div class="outcome-trackers" id="player1-wins"></div>
-            <div class="outcome-trackers" id="player1-losses"></div>
+    <div id="current-turn"></div>
+
+    <div id="game-div">
+
+        <div id="player1">
+            <h3 id="player1-name">Player1</h3>
+            <ul id="player1-choices">
+            </ul>
+            <div id="player1-chosen"></div>
+            <div class="outcomes">
+                <div class="outcome-trackers" id="player1-wins"></div>
+                <div class="outcome-trackers" id="player1-losses"></div>
+            </div>
+        </div>
+
+        <div id="result"></div>
+
+        <div id="player2">
+            <h3 id="player2-name">Player2</h3>
+            <ul id="player2-choices">
+            </ul>
+            <div id="player2-chosen"></div>
+            <div class="outcomes">
+                <div class="outcome-trackers" id="player2-wins"></div>
+                <div class="outcome-trackers" id="player2-losses"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Chat/Spectator Section -->
+<div id="chatRoomSection">
+        <div id="chat">
+            <div id="chat-messages"></div>
+            <div id="chat-bar">
+                <div id="chatInputDiv" class="mx-auto text-center">
+                    <input id="chat-input" class="mx-auto text-center">
+                </div>
+            </div>
+        </div>
+        <div id="chatButtonDiv" class="mx-auto text-center">
+            <button id="chat-send" class="mx-auto text-center btn btn-info btn-lg">Send
+                <i class="fa fa-commenting-o"></i>
+            </button>
         </div>
     </div>
+    <!-- Chat/Spectator Secion /-->
+</div>
 
-    <div id="result"></div>
 
-    <div id="player2">
-        <h3 id="player2-name">Player2</h3>
-        <ul>
-        </ul>
-        <div id="player2-chosen"></div>
-        <div class="outcomes">
-            <div class="outcome-trackers" id="player2-wins"></div>
-            <div class="outcome-trackers" id="player2-losses"></div>
+
+
+<!-- Modal -->
+<div id="modalSection">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Unfortunately the lobby is full, please feel free to use the chatroom until it is your time to play
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<!-- Modal /-->
 
-</div>
 
-<div id="chat">
-    <div id="chat-messages"></div>
-    <div id="chat-bar">
-        <div id="chatInputDiv" class="mx-auto text-center">
-        <input id="chat-input" class="mx-auto text-center">
-    </div>
-    </div>
-</div>
-<div id="chatButtonDiv" class="mx-auto text-center">
-    <button id="chat-send" class="mx-auto text-center btn btn-info btn-lg">Send</button>
-</div>
-
-</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 <script src="assets/javascript/app.js"></script>
