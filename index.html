@@ -15,65 +15,64 @@
 </head>
 
 <header>
-    <div class = "container">
-       <h1 style = "text-align: center" >Play Extreme! Rock Paper Scissors!</h1>
-    </div>
+    <h1 style="text-align: center">Firebase RPS Multiplayer</h1>
 </header>
 
 
-<header>
-    <h1>Rock Paper Scissors</h1>
-  </header>
+<div id="swap-zone">
+    <input id="username" placeholder="Name">
+</div>
+<div id="startButtonDiv" class="mx-auto text-center">
+    <button id="start" class="mx-auto text-center btn btn-primary">Start</button>
+</div>
 
-  <div id="sizer">
+<div id="current-turn"></div>
 
-    <div id="swap-zone"><input id="username" placeholder="Name"/>
-      <button id="start">Start</button>
-    </div>
+<div id="game-div">
 
-    <div id="current-turn"></div>
-
-    <div id="game-div">
-
-      <div id="player1">
+    <div id="player1">
         <h3 id="player1-name">Player1</h3>
         <ul>
         </ul>
         <div id="player1-chosen"></div>
         <div class="outcomes">
-          <div class="outcome-trackers" id="player1-wins"></div>
-          <div class="outcome-trackers" id="player1-losses"></div>
+            <div class="outcome-trackers" id="player1-wins"></div>
+            <div class="outcome-trackers" id="player1-losses"></div>
         </div>
-      </div>
+    </div>
 
-      <div id="result"></div>
+    <div id="result"></div>
 
-      <div id="player2">
+    <div id="player2">
         <h3 id="player2-name">Player2</h3>
         <ul>
         </ul>
         <div id="player2-chosen"></div>
         <div class="outcomes">
-          <div class="outcome-trackers" id="player2-wins"></div>
-          <div class="outcome-trackers" id="player2-losses"></div>
+            <div class="outcome-trackers" id="player2-wins"></div>
+            <div class="outcome-trackers" id="player2-losses"></div>
         </div>
-      </div>
-
     </div>
 
-    <div id="chat">
-      <div id="chat-messages"></div>
-      <div id="chat-bar">
-        <input id="chat-input" />
-        <button id="chat-send">Send</button>
-      </div>
+</div>
+
+<div id="chat">
+    <div id="chat-messages"></div>
+    <div id="chat-bar">
+        <div id="chatInputDiv" class="mx-auto text-center">
+        <input id="chat-input" class="mx-auto text-center">
     </div>
+    </div>
+</div>
+<div id="chatButtonDiv" class="mx-auto text-center">
+    <button id="chat-send" class="mx-auto text-center btn btn-info btn-lg">Send</button>
+</div>
 
-  </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="assets/javascript/app.js"></script>
-    </body>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script src="assets/javascript/app.js"></script>
+</body>
 
 </html>
 

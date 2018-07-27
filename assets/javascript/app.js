@@ -8,9 +8,10 @@ const config = {
   messagingSenderId: "194931602404"
 };
 
-let database = firebase.database();
 
 firebase.initializeApp(config);
+
+let database = firebase.database();
 
 var chatData = database.ref("/chat");
 var playersReference = database.ref("players");
@@ -135,7 +136,7 @@ chatData.orderByChild("time").on("child_added", function(snapshot) {
 });
 
 // Tracks changes in key which contains player objects
-playersRef.on("value", function(snapshot) {
+playersReference.on("value", function(snapshot) {
   // length of the 'players' array
   currentPlayers = snapshot.numChildren();
 
@@ -243,14 +244,14 @@ currentTurnReference.on("value", function(snapshot) {
       $("#player1 ul").empty();
       $("#player2 ul").empty();
       $("#current-turn").html("<h2>Waiting for another player to join.</h2>");
-      $("#player2").css("border", "1px solid black");
-      $("#player1").css("border", "1px solid black");
+      // $("#player2").css("border", "1px solid black");
+      // $("#player1").css("border", "1px solid black");
     }
   }
 });
 
 // When a player joins, checks to see if there are two players now. If yes, then it will start the game.
-playersRef.on("child_added", function(snapshot) {
+playersReference.on("child_added", function(snapshot) {
   if (currentPlayers === 1) {
     // set turn to 1, which starts the game
     currentTurnReference.set(1);
@@ -300,7 +301,7 @@ function getInGame() {
 
     // Remove name input box and show current player number.
     $("#swap-zone").html(
-      "<h2>Hi " + username + "! You are Player " + playerNum + "</h2>"
+      "<h2>Hi " + username + "! You are Player " + playerNumber + "</h2>"
     );
   } else {
     // If current players is "2", will not allow the player to join
