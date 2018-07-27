@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+    <title>RPS Multiplayer</title>
+</head>
+
+<body>
+    <h1 class="mx-auto text-center display-4">Multiplayer Rock Paper Scissors!</h1>
+
+
+    <!-- Game Instructions -->
+    <p class="mx-auto text-center" id="joinGame">To join game type in a username</p>
+    <!-- Game Instructions /-->
+<div class="mx-auto text-center w-50">
+    <form class="mx-auto userNameForm">
+    <input class="form-control" type="text" placeholder="Enter Username.." id="userNameEntry">
+    <input class="mx-auto btn btn-primary btn-lg" type="submit" id="playButton">
+</form>
+</div>
+
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+    <script></script>
+    <script src="assets/javascript/app.js"></script>
+</body>
+</html>
+
+<!-- Notes to self:
+1. Create a start Menu for the game
+2. Make sure to create a firebase database for this project
+3. Include the firebase script tags
+4. Create UI friendly event handlers
+5. Also, create a way to restart the game (try to do it without reloading the webpage if not that's fine)
+
+-->
