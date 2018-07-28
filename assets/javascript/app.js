@@ -13,25 +13,43 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var chatData = database.ref("/chat");
+var chatData = database.ref("chat");
 var playersReference = database.ref("players");
 var currentTurnReference = database.ref("turn");
+console.log('currentTurnReference global var decl', currentTurnReference)
+currentTurnReference.set(1)
+
 var username = "Guest";
 var currentPlayers = null;
-var currentTurn = null;
-var playerNumber = false;
+var currentTurn = 0;
+var playerID = 0;
 var playerOneExists = false;
 var playerTwoExists = false;
 var playerOneData = null;
 var playerTwoData = null;
 var gamepanel = $("#RPSGame").hide();
-var modal = $("#modalSection").hide();
+
+// Flash Message when user is waiting on opponent
+$("#flashMessage").hide();
+
+function showFlashMessage() {
+  $("#flashMessage")
+    .fadeIn(1000)
+    .delay(3000)
+    .fadeOut(1000);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+};
+
+
+
 
 // Event Handler for Pre Game Menu
 $("#startGamePanelButton").on('click', () => {
     $("#preGameMenu").hide();
     $("#RPSGame").show();
 });
+
 
 
 
@@ -47,7 +65,7 @@ $("#start").click(function() {
   }
 });
 
-// event hanlder for 'enter' in username input
+// event handler for 'enter' in username input
 $("#username").keypress(function(event) {
   if (event.which === 13 && $("#username").val() !== "") {
     username = capitalize($("#username").val());
@@ -70,7 +88,7 @@ $("#chat-send").click(function() {
       name: username,
       message: message,
       time: firebase.database.ServerValue.TIMESTAMP,
-      idNumber: playerNumber
+      idNumber: playerID
     });
 
     $("#chat-input").val("");
@@ -87,27 +105,32 @@ $("#chat-input").keypress(function(event) {
       name: username,
       message: message,
       time: firebase.database.ServerValue.TIMESTAMP,
-      idNumber: playerNumber
+      idNumber: playerID
     });
 
     $("#chat-input").val("");
   }
 });
 
-// Click event for dynamically added <li> elements
+// 
 $(document).on("click", "li", function() {
   console.log("click");
+  if (!playerTwoData) {
+    // alert('Player two has not joined the game!')
+    showFlashMessage()
+    return
+  }
 
   // Grabs text from li choice
-  var clickChoice = $(this).text();
-  console.log(playerReference);
+  var clickChoice = $(this).val();
+  console.log(playersReference);
 
   // Sets the choice in the current player object in firebase
-  playerReference.child("choice").set(clickChoice);
+  playersReference.child("choice").set(clickChoice);
 
   // User has chosen, so removes choices and displays what they chose
-  $("#player" + playerNumber + " ul").empty();
-  $("#player" + playerNumber + "chosen").text(clickChoice);
+  $("#player" + playerID + " ul").empty();
+  $("#player" + playerID + "chosen").text(clickChoice);
 
   // Increments turn. Turn goes from:
   // 1 - player 1
@@ -150,9 +173,14 @@ chatData.orderByChild("time").on("child_added", function(snapshot) {
 
 // Tracks changes in key which contains player objects
 playersReference.on("value", function(snapshot) {
+  if (!snapshot.val()) {
+    return
+  }
   // length of the 'players' array
   currentPlayers = snapshot.numChildren();
-
+  console.log('playersReference', currentPlayers)
+  console.log(snapshot.val())
+  
   // Check to see if players exist
   playerOneExists = snapshot.child("1").exists();
   playerTwoExists = snapshot.child("2").exists();
@@ -160,6 +188,9 @@ playersReference.on("value", function(snapshot) {
   // Player data objects
   playerOneData = snapshot.child("1").val();
   playerTwoData = snapshot.child("2").val();
+
+
+
 
   // If theres a player 1, fill in name and win loss data
   if (playerOneExists) {
@@ -186,21 +217,25 @@ playersReference.on("value", function(snapshot) {
   }
 });
 
-// Detects changes in current turn key
-currentTurnReference.on("value", function(snapshot) {
-  // Gets current turn from snapshot
-  currentTurn = snapshot.val();
+const showTurnOptions = () => {
 
+  console.log("currentTurnReferenceA", playerID, currentTurn);
+  
   // Don't do the following unless you're logged in
-  if (playerNumber) {
+  if (playerID > 0) {
+    console.log("currentTurnReferenceB", playerID);
     // For turn 1
     if (currentTurn === 1) {
+      console.log("currentTurnReferenceC", currentTurn);
       // If its the current player's turn, tell them and show choices
-      if (currentTurn === playerNumber) {
+      if (currentTurn === playerID) {
+        console.log("currentTurnReferenceD");
         $("#current-turn").html("<h2>It's Your Turn!</h2>");
-        $("#player1-choices" + playerNumber + " ul").append(
-          "<li>Rock</li><li>Paper</li><li>Scissors</li>"
+        $("#player1 ul").append(
+          '<li style="font-size: 15px;">Rock</li> <li style="font-size: 15px;">Paper</li> <li style="font-size: 15px;">Scissors</li>'
         );
+
+
       } else {
         // If it isn't the current players turn, tells them they're waiting for player one
         $("#current-turn").html(
@@ -213,12 +248,15 @@ currentTurnReference.on("value", function(snapshot) {
       $("#player2").css("border", "1px solid black");
     } else if (currentTurn === 2) {
       // If its the current player's turn, tell them and show choices
-      if (currentTurn === playerNumber) {
+      if (currentTurn === playerID) {
         $("#current-turn").html("<h2>It's Your Turn!</h2>");
-        $("#player2-choices" + playerNumber + " ul").append(
-          "<li>Rock</li> <li>Paper</li> <li>Scissors</li>"
+        $("#player2 ul").append(
+          '<li style="font-size: 15px;">Rock</li> <li style="font-size: 15px;">Paper</li> <li style="font-size: 15px;">Scissors</li>'
         );
       } else {
+        if (!playerTwoData) {
+          return
+        }
         // If it isn't the current players turn, tells them they're waiting for player two
         $("#current-turn").html(
           "<h2>Waiting for " + playerTwoData.name + " to choose.</h2>"
@@ -228,7 +266,7 @@ currentTurnReference.on("value", function(snapshot) {
       // Shows yellow border around active player
       $("#player2").css("border", "2px solid yellow");
       $("#player1").css("border", "1px solid black");
-    } else if (currentTurn === 3) {
+    } else if ( currentTurn !== 1 || currentTurn !== 2 ) {
       // Where the game win logic takes place then resets to turn 1
       gameLogic(playerOneData.choice, playerTwoData.choice);
 
@@ -251,9 +289,10 @@ currentTurnReference.on("value", function(snapshot) {
       //  show results for 2 seconds, then resets
       setTimeout(moveOn, 2000);
     } else {
-       if (playerNumber) {
-         $("#player" + playerNumber + " ul").empty();
+       if (playerID) {
+         $("#player" + playerID + " ul").empty();
        }
+       console.log("game over");
       $("#player1 ul").empty();
       $("#player2 ul").empty();
       $("#current-turn").html("<h2>Waiting for another player to join.</h2>");
@@ -261,12 +300,26 @@ currentTurnReference.on("value", function(snapshot) {
       $("#player1").css("border", "1px solid black");
     }
   }
-});
 
+}
+
+
+
+
+
+// Detects changes in current turn key
+currentTurnReference.on("value", function(snapshot) {
+   // Gets current turn from snapshot
+   console.log('currentTurnReference snapshot', snapshot.val())
+   currentTurn = snapshot.val();
+   showTurnOptions()
+});
 // When a player joins, checks to see if there are two players now. If yes, then it will start the game.
 playersReference.on("child_added", function(snapshot) {
+  console.log('child added', currentPlayers, snapshot.val() )
   if (currentPlayers === 1) {
     // set turn to 1, which starts the game
+    console.log('currentTurnReference.set(1)');
     currentTurnReference.set(1);
   }
 });
@@ -276,36 +329,52 @@ function getInGame() {
   // For adding disconnects to the chat with a unique id (the date/time the user entered the game)
   // Needed because Firebase's '.push()' creates its unique keys client side,
   // so you can't ".push()" in a ".onDisconnect"
-  var chatDataDisc = database.ref("/chat/" + Date.now());
+  var chatDataDisconnect = database.ref("/chat/" + Date.now());
 
   // Checks for current players, if theres a player one connected, then the user becomes player 2.
   // If there is no player one, then the user becomes player 1
-  if (currentPlayers < 2) {
+  if (currentPlayers <= 2) {
     if (playerOneExists) {
-      playerNumber = 2;
+      playerID = 2;
+      
     } else {
-      playerNumber = 1;
+      playerID = 1;
     }
-
+    console.log('playerID', playerID)
     // Creates key based on assigned player number
-    playerReference = database.ref("/players/" + playerNumber);
+    playersReference = database.ref("/players/" + playerID);
 
     // Creates player object. 'choice' is unnecessary here, but I left it in to be as complete as possible
-    playerReference.set({
+    console.log('playersReference set current player', playersReference);
+    playersReference.set({
       name: username,
       wins: 0,
       losses: 0,
       choice: null
+    }, function(error) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log('Data is set');
+        console.log(currentTurnReference)
+        showTurnOptions();
+        currentTurnReference.set(2);
+      }
     });
+  
+
+
+    //  .then(() => {
+    // });
 
     // On disconnect remove this user's player object
-    playerReference.onDisconnect().remove();
+    playersReference.onDisconnect().remove();
 
     // If a user disconnects, set the current turn to 'null' so the game does not continue
     currentTurnReference.onDisconnect().remove();
 
     // Send disconnect message to chat with Firebase server generated timestamp and id of '0' to denote system message
-    chatDataDisc.onDisconnect().set({
+    chatDataDisconnect.onDisconnect().set({
       name: username,
       time: firebase.database.ServerValue.TIMESTAMP,
       message: "has disconnected.",
@@ -314,7 +383,7 @@ function getInGame() {
 
     // Remove name input box and show current player number.
     $("#swap-zone").html(
-      "<h2>Hi " + username + "! You are Player " + playerNumber + "</h2>"
+      "<h2>Hi " + username + "! You are Player " + playerID + "</h2>"
     );
   } else {
     // If hobby is full, display modal for error handling
@@ -327,7 +396,7 @@ function getInGame() {
 function gameLogic(player1choice, player2choice) {
   var playerOneWon = function() {
     $("#result").html("<h2>" + playerOneData.name + "</h2><h2>Wins!</h2>");
-    if (playerNumber === 1) {
+    if (playerID === 1) {
       playersReference
         .child("1")
         .child("wins")
@@ -341,7 +410,7 @@ function gameLogic(player1choice, player2choice) {
 
   var playerTwoWon = function() {
     $("#result").html("<h2>" + playerTwoData.name + "</h2><h2>Wins!</h2>");
-    if (playerNumber === 2) {
+    if (playerID === 2) {
       playersReference
         .child("2")
         .child("wins")
@@ -376,7 +445,15 @@ function gameLogic(player1choice, player2choice) {
   } else if (player1choice === "Scissors" && player2choice === "Paper") {
     playerOneWon();
   }
+
 }
+
+
+
+
+
+
+
 
 
 
@@ -387,6 +464,7 @@ function gameLogic(player1choice, player2choice) {
 
 
 
+// create a function that does not allow users to have the same name
 
 // Notes to self //
 
@@ -434,8 +512,10 @@ function gameLogic(player1choice, player2choice) {
 
 // 18. Possibly allow users to create their own accounts
 
+// 19. add a play again button to restart the whole game
+
 
 // An Absolute Must, 
-// 19. Go back and convert all code into react.js syntax as that will significantly reduce the amount of code, on top of the revisions I will be making in vanilla js.
+// 20. Go back and convert all code into react.js syntax as that will significantly reduce the amount of code, on top of the revisions I will be making in vanilla js.
 
-// 20. Go back and try to change the ES5 syntax to the originally intended ES6 syntax in order to practice for more react.js
+// 21. Go back and try to change the ES5 syntax to the originally intended ES6 syntax in order to practice for more react.js

@@ -18,6 +18,28 @@
   h2 {
     font-size: 18px;
   }
+
+  ul#player-choices, 
+  li {
+    cursor: pointer;
+    list-style: none;
+    font-size: 3px;
+    margin-bottom: 55px;
+  }
+
+  li {
+    background: lightgray;
+  }
+
+  
+#flashMessage {
+    color: white;
+    background-color: #0072ff;
+    padding: 15px;
+    border-radius: 5px;
+    width: calc(100% - 100px); 
+    margin-bottom: 50px;
+}
   
 
    /***********************************
@@ -190,4 +212,8 @@
   .player0 {
     color: #000;
     background-color: #d3d3d3;
+  }
+
+  #player1-name {
+    font-size: 25px;
   }
